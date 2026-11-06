@@ -22,15 +22,21 @@ async function main() {
       // Match the exact identifier displayed in your LM Studio Server logs
       model: "granite-4.0-micro", 
       messages: [
-        { role: "user", content: "Just trying you out for the first time" }
+        { role: "user", content: "Can you solve simple mathematical equations?" }
       ],
       temperature: 0.7,
-      max_completion_tokens: 50
+      max_completion_tokens: 100,
+      stream: true
     });
 
-    console.log(completion.choices[0].message.content);
+    //console.log(completion.choices[0].message.content);
+    for await (const event of completion) {
+      if (event.choices[0].delta.content) {
+        process.stdout.write(event.choices[0].delta.content);
+      }
+    }
   } catch (error) {
-    console.error("Make sure your LM Studio server is running on port 1234:", error.message);
+    console.error("Make sure your LM Studio server is running on port 1235:", error.message);
   }
 }
 
